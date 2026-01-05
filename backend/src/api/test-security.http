@@ -1,0 +1,112 @@
+### Test Security Middleware
+### Use with REST Client extension in VSCode or similar tools
+
+@baseUrl = http://localhost:4001
+@userId = test-user-123
+@userEmail = test@example.com
+
+### 1. Test Normal Request (Should succeed)
+POST {{baseUrl}}/api/appointments
+Content-Type: application/json
+x-clerk-user-id: {{userId}}
+x-clerk-user-email: {{userEmail}}
+
+{
+  "doctorId": "cm5e7v3s80001m34zojhx1w72",
+  "date": "2026-02-15",
+  "time": "10:00",
+  "reason": "Regular checkup"
+}
+
+### 2. Test XSS Prevention (Should sanitize HTML)
+POST {{baseUrl}}/api/appointments
+Content-Type: application/json
+x-clerk-user-id: {{userId}}
+x-clerk-user-email: {{userEmail}}
+
+{
+  "doctorId": "cm5e7v3s80001m34zojhx1w72",
+  "date": "2026-02-16",
+  "time": "11:00",
+  "reason": "<script>alert('XSS')</script>Tooth pain"
+}
+
+### Expected: The reason field should be sanitized (HTML stripped)
+
+### 3. Test SQL Injection Prevention (Should sanitize)
+POST {{baseUrl}}/api/appointments
+Content-Type: application/json
+x-clerk-user-id: {{userId}}
+x-clerk-user-email: {{userEmail}}
+
+{
+  "doctorId": "cm5e7v3s80001m34zojhx1w72",
+  "date": "2026-02-17",
+  "time": "14:00",
+  "reason": "Checkup'; DROP TABLE appointments; --"
+}
+
+### Expected: SQL patterns should be removed
+
+### 4. Test Control Characters (Should be removed)
+POST {{baseUrl}}/api/appointments
+Content-Type: application/json
+x-clerk-user-id: {{userId}}
+x-clerk-user-email: {{userEmail}}
+
+{
+  "doctorId": "cm5e7v3s80001m34zojhx1w72",
+  "date": "2026-02-18",
+  "time": "15:00",
+  "reason": "Dental\x00\x01cleaning"
+}
+
+### Expected: Null bytes and control characters removed
+
+### 5. Test Rate Limiting (Run this 35 times quickly)
+### Make 35 rapid requests - should get 429 after 30 requests
+POST {{baseUrl}}/api/appointments
+Content-Type: application/json
+x-clerk-user-id: rate-limit-test-user
+x-clerk-user-email: ratelimit@example.com
+
+{
+  "doctorId": "cm5e7v3s80001m34zojhx1w72",
+  "date": "2026-02-20",
+  "time": "09:00",
+  "reason": "Rate limit test {{$randomInt}}"
+}
+
+### Expected responses:
+### Requests 1-30: HTTP 201 Created (or other errors based on data validity)
+### Requests 31-35: HTTP 429 Too Many Requests
+### Headers should show:
+### X-RateLimit-Limit: 30
+### X-RateLimit-Remaining: (decreasing from 29 to 0)
+### X-RateLimit-Reset: (timestamp when limit resets)
+### Retry-After: (seconds to wait)
+
+### 6. Test Very Long Input (Should be truncated)
+POST {{baseUrl}}/api/appointments
+Content-Type: application/json
+x-clerk-user-id: {{userId}}
+x-clerk-user-email: {{userEmail}}
+
+{
+  "doctorId": "cm5e7v3s80001m34zojhx1w72",
+  "date": "2026-02-19",
+  "time": "16:00",
+  "reason": "This is a very long reason that exceeds the maximum length limit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. This text continues for many more characters to test the truncation functionality of the sanitization middleware. It should be cut off at the maximum allowed length which is configured in the middleware settings. The middleware should handle this gracefully without throwing errors and just silently truncate to the maximum allowed length preserving the beginning of the text."
+}
+
+### Expected: Input truncated to maxLength (10000 for medical notes)
+
+### 7. Check Rate Limit Headers (Normal request to see headers)
+GET {{baseUrl}}/api/appointments
+x-clerk-user-id: {{userId}}
+x-clerk-user-email: {{userEmail}}
+
+### Expected headers in response:
+### X-RateLimit-Limit: 100
+### X-RateLimit-Remaining: 99 (or less)
+### X-RateLimit-Reset: <timestamp>
