@@ -1,0 +1,156 @@
+[
+  {
+    "id": "user-management",
+    "config": {
+      "src\\api\\get-current-user.step.ts": {
+        "x": 100,
+        "y": 100
+      },
+      "src\\api\\update-current-user.step.ts": {
+        "x": 400,
+        "y": 100
+      }
+    }
+  },
+  {
+    "id": "analytics",
+    "config": {
+      "src\\events\\appointment-created-analytics.step.ts": {
+        "x": -126,
+        "y": 19
+      },
+      "src\\events\\appointment-completed-analytics.step.ts": {
+        "x": 193,
+        "y": 19
+      }
+    }
+  },
+  {
+    "id": "admin-management",
+    "config": {
+      "src\\api\\admin-stats.step.ts": {
+        "x": 44,
+        "y": 102
+      },
+      "src\\api\\admin-list-appointments.step.ts": {
+        "x": 400,
+        "y": 100
+      }
+    }
+  },
+  {
+    "id": "appointment-management",
+    "config": {
+      "src\\events\\appointment-updated.step.ts": {
+        "x": 1979,
+        "y": 343
+      },
+      "src\\events\\appointment-created.step.ts": {
+        "x": -227,
+        "y": 136
+      },
+      "src\\events\\appointment-cancelled.step.ts": {
+        "x": 280,
+        "y": 465
+      },
+      "src\\api\\update-appointment-status.step.ts": {
+        "x": 1606,
+        "y": 142
+      },
+      "src\\api\\list-appointments.step.ts": {
+        "x": 904,
+        "y": 125
+      },
+      "src\\api\\get-appointment.step.ts": {
+        "x": 589,
+        "y": 131
+      },
+      "src\\api\\get-appointment-stats.step.ts": {
+        "x": 1289,
+        "y": 127
+      },
+      "src\\api\\create-appointment.step.ts": {
+        "x": -130,
+        "y": 506
+      },
+      "src\\api\\cancel-appointment.step.ts": {
+        "x": 196,
+        "y": 129
+      }
+    }
+  },
+  {
+    "id": "video-management",
+    "config": {
+      "src\\api\\update-video-progress.step.ts": {
+        "x": -4067,
+        "y": 295
+      },
+      "src\\api\\list-videos.step.ts": {
+        "x": -3591,
+        "y": 291
+      },
+      "src\\api\\get-video.step.ts": {
+        "x": -3129,
+        "y": 292
+      },
+      "src\\api\\admin-video-detail-analytics.step.ts": {
+        "x": -2684,
+        "y": 297
+      },
+      "src\\api\\admin-video-analytics.step.ts": {
+        "x": -2286,
+        "y": 306
+      },
+      "src\\api\\admin-update-video.step.ts": {
+        "x": -4096,
+        "y": 756
+      },
+      "src\\api\\admin-list-videos.step.ts": {
+        "x": -3621,
+        "y": 749
+      },
+      "src\\api\\admin-get-upload-status.step.ts": {
+        "x": -3182,
+        "y": 740
+      },
+      "src\\api\\admin-delete-video.step.ts": {
+        "x": -2677,
+        "y": 731
+      },
+      "src\\api\\admin-create-upload.step.ts": {
+        "x": -2234,
+        "y": 734
+      },
+      "src\\api\\admin-add-video.step.ts": {
+        "x": -4097,
+        "y": 1157
+      }
+    }
+  },
+  {
+    "id": "doctor-management",
+    "config": {
+      "src\\api\\update-doctor.step.ts": {
+        "x": 409,
+        "y": 10
+      },
+      "src\\api\\list-doctors.step.ts": {
+        "x": 993,
+        "y": 12
+      },
+      "src\\api\\get-doctor.step.ts": {
+        "x": 731,
+        "y": 14
+      },
+      "src\\api\\get-doctor-availability.step.ts": {
+        "x": 1228,
+        "y": 9
+      },
+      "src\\api\\create-doctor.step.ts": {
+        "x": 109,
+        "y": 7
+      }
+    }
+  }
+]
