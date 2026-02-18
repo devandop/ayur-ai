@@ -24,11 +24,6 @@ function AdminDashboardClient() {
   const { data: doctors = [], isLoading: doctorsLoading } = useGetDoctors();
   const { data: appointments = [], isLoading: appointmentsLoading } = useAdminAppointments();
 
-  // Debug: log appointments data
-  console.log("Admin appointments data:", appointments);
-  console.log("Total appointments:", appointments.length);
-  console.log("Completed:", appointments.filter((app: Appointment) => app.status === "COMPLETED").length);
-
   // calculate stats from real data
   const stats = {
     totalDoctors: doctors.length,
