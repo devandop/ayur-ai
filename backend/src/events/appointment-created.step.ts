@@ -5,6 +5,7 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY!)
 
+// Define the schema for runtime validation (used in handler)
 const inputSchema = z.object({
   appointmentId: z.string(),
   patientEmail: z.string().email(),
@@ -22,7 +23,6 @@ export const config: EventConfig = {
   description: 'Send confirmation email when appointment is created',
   subscribes: ['appointment.created'],
   emits: [],
-  input: inputSchema,
   flows: ['appointment-management'],
 }
 
@@ -48,15 +48,15 @@ export const handler = async (
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #ffffff; margin: 0; padding: 20px;">
           <div style="max-width: 560px; margin: 0 auto; padding: 20px; background-color: #ffffff;">
             <div style="text-align: center; margin-bottom: 32px;">
-              <h2 style="color: #2563eb; margin: 0;">DentWise</h2>
+              <h2 style="color: #2563eb; margin: 0;">AyurAI</h2>
             </div>
 
-            <h1 style="color: #1f2937; font-size: 24px; text-align: center; margin: 30px 0;">Appointment Confirmed! 🦷</h1>
+            <h1 style="color: #1f2937; font-size: 24px; text-align: center; margin: 30px 0;">Appointment Confirmed! 🌿</h1>
 
             <p style="color: #374151; font-size: 16px; line-height: 26px;">Hi ${patientName},</p>
 
             <p style="color: #374151; font-size: 16px; line-height: 26px;">
-              Your dental appointment has been successfully booked:
+              Your ayurvedic appointment has been successfully booked:
             </p>
 
             <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px; margin: 24px 0;">
@@ -82,11 +82,11 @@ export const handler = async (
 
             <p style="color: #374151; font-size: 16px; line-height: 26px; margin: 32px 0 16px 0;">
               Best regards,<br/>
-              The DentWise Team
+              The AyurAI Team
             </p>
 
             <p style="color: #6b7280; font-size: 14px; line-height: 24px; text-align: center;">
-              If you have any questions, please contact us at support@dentwise.com
+              If you have any questions, please contact us at support@ayurai.com
             </p>
           </div>
         </body>
@@ -109,7 +109,7 @@ export const handler = async (
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'DentWise <onboarding@resend.dev>',
+      from: 'AyurAI <onboarding@resend.dev>',
       to: [emailRecipient],
       subject: `Appointment Confirmed with Dr. ${doctorName}`,
       html: emailHtml,
@@ -123,7 +123,7 @@ export const handler = async (
 
       // In development, don't throw error - just log it
       if (isDevelopment) {
-        logger.warn('Email sending failed in development mode (expected with unverified domain)', {
+        logger.info('Email sending failed in development mode (expected with unverified domain)', {
           appointmentId,
           intendedRecipient: patientEmail,
         })
